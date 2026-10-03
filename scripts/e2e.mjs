@@ -37,24 +37,24 @@ try {
   await page.goto(`${BASE}#/`)
   await page.getByText('Demo ausprobieren').waitFor()
   await page.getByRole('button', { name: /Lena Hoffmann/ }).click()
-  await page.getByText('Hallo, Lena!').waitFor()
+  await page.getByText(', Lena!').waitFor()
 
   step('Training zusagen (Ein-Tipp)')
-  const firstCard = page.locator('main').getByRole('button', { name: 'Lena: Dabei' }).first()
+  const firstCard = page.locator('main').getByRole('button', { name: 'Lena: Dabei', disabled: false }).first()
   await firstCard.click()
   await page.getByText('Zugesagt – bis dann!').waitFor()
   assert.equal(await firstCard.getAttribute('aria-pressed'), 'true')
 
   step('Absage mit Grund')
-  await page.locator('main').getByRole('button', { name: 'Lena: Nicht dabei' }).nth(1).click()
+  await page.locator('main').getByRole('button', { name: 'Lena: Nicht dabei', disabled: false }).nth(1).click()
   await page.getByRole('button', { name: 'Krank' }).click()
   await page.getByRole('button', { name: 'Absage senden' }).click()
   await page.getByText('Abgesagt', { exact: true }).first().waitFor()
 
   step('Rückmeldungen bleiben nach Neuladen erhalten')
   await page.reload()
-  await page.getByText('Hallo, Lena!').waitFor()
-  assert.equal(await page.locator('main').getByRole('button', { name: 'Lena: Dabei' }).first().getAttribute('aria-pressed'), 'true')
+  await page.getByText(', Lena!').waitFor()
+  assert.equal(await page.locator('main').getByRole('button', { name: 'Lena: Dabei', disabled: false }).first().getAttribute('aria-pressed'), 'true')
 
   step('Helferschicht übernehmen')
   await page.goto(`${BASE}#/helfen/hl-derby`)
@@ -83,7 +83,7 @@ try {
   await page.goto(`${BASE}#/einstellungen`)
   await page.getByRole('button', { name: 'Andere Rolle ausprobieren' }).click()
   await page.getByRole('button', { name: /Tim Schäfer/ }).click()
-  await page.getByText('Hallo, Tim!').waitFor()
+  await page.getByText(', Tim!').waitFor()
 
   step('Trainer erfasst Spiel live')
   await page.goto(`${BASE}#/termine/g-t1-5/live`)
