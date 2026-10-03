@@ -6,6 +6,9 @@
   "description": "Vereins-App des Schweriner Korfball Club e. V. '67",
   "scripts": {
     "dev": "vite",
+    "lokal": "node scripts/local.mjs",
+    "lokal:stop": "supabase stop",
+    "lokal:reset": "supabase db reset",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
@@ -13,7 +16,8 @@
     "test:db": "bash supabase/tests/run.sh",
     "test:api": "bash supabase/tests/integration.sh",
     "test:e2e": "vite build && node scripts/e2e.mjs",
-    "screenshots": "node scripts/screenshots.mjs"
+    "screenshots": "node scripts/screenshots.mjs",
+    "demo:sql": "tsx scripts/demo-sql.ts"
   },
   "dependencies": {
     "@fontsource-variable/inter": "^5.3.0",
@@ -35,7 +39,9 @@
     "@vitejs/plugin-react": "^6.1.1",
     "jsdom": "^29.1.1",
     "playwright-core": "^1.63.0",
+    "supabase": "^2.119.0",
     "tailwindcss": "^4.3.3",
+    "tsx": "^4.23.15",
     "typescript": "^7.0.2",
     "vite": "^8.3.2",
     "vite-plugin-pwa": "^2.0.0",

@@ -8,6 +8,44 @@ Die App für den **Schweriner Korfball Club e. V. '67**: Trainings und Spiele zu
 
 ---
 
+## Komplett lokal auf dem PC
+
+So läuft **alles** auf deinem eigenen Rechner – App, Datenbank, Anmeldung und ein Test-Postfach für die Anmeldecodes. Nichts geht ins Internet.
+
+**Einmalig installieren**
+
+1. **Node.js** (LTS-Version): https://nodejs.org
+2. **Docker Desktop**: https://www.docker.com/products/docker-desktop – installieren und **starten** (Wal-Symbol in der Taskleiste)
+3. Diesen Projektordner herunterladen (GitHub: *Code → Download ZIP*) und entpacken
+
+**Starten**
+
+- **Windows:** Doppelklick auf `Start-SKC-App.bat`
+- **Mac:** Doppelklick auf `Start-SKC-App.command` (beim ersten Mal ggf. Rechtsklick → *Öffnen*)
+- oder im Terminal: `npm install` und dann `npm run lokal`
+
+Beim ersten Start werden die Datenbank-Bausteine heruntergeladen (einige Minuten, ca. 2–3 GB). Danach öffnet sich die App im Browser:
+
+| Was | Adresse |
+| --- | --- |
+| App | http://localhost:5173 |
+| E-Mail-Postfach mit den Anmeldecodes | http://127.0.0.1:54324 |
+| Datenbank-Ansicht (Supabase Studio) | http://127.0.0.1:54323 |
+
+**Anmelden:** E-Mail eingeben (oder im Anmeldebildschirm antippen), Code aus dem lokalen Postfach abtippen. Test-Logins mit Beispieldaten:
+`lena@example.org` (Spielerin) · `tim@example.org` (Trainer) · `sabine@example.org` (Elternteil) · `andrea@example.org` (Vorstand).
+Weitere Personen legt der Vorstand über „Zugang anfragen → Freischalten“ an.
+
+| Befehl | Wirkung |
+| --- | --- |
+| `npm run lokal` | Datenbank (falls nötig) und App starten |
+| `npm run lokal:stop` | Datenbank stoppen (Daten bleiben erhalten) |
+| `npm run lokal:reset` | Alles auf Anfang: Datenbank leeren und frische Beispieldaten einspielen |
+
+Ohne Docker startet `npm run lokal` automatisch den Demo-Modus. Andere Geräte im WLAN (z. B. dein Handy) erreichen die lokale App nicht automatisch – dafür ist der Online-Betrieb (siehe unten) gedacht.
+
+---
+
 ## Was die App kann
 
 | Bereich | Funktionen |
@@ -64,6 +102,8 @@ supabase/
   migrations/             Datenbankschema, Rechte, Funktionen
   functions/send-push/    Edge Function für Push-Benachrichtigungen
   seed.sql                Startdaten (Teams, Hallen, Fanshop)
+  seed.demo.sql           Beispieldaten für den lokalen Betrieb (erzeugt mit npm run demo:sql)
+  config.toml             Einstellungen für die lokale Supabase (npm run lokal)
   tests/                  Datenbank- und Integrationstests
 ```
 
@@ -72,7 +112,7 @@ supabase/
 | Befehl | Prüft |
 | --- | --- |
 | `npm test` | Logik: Zusagen, Abwesenheiten, 4+4, Fächerwechsel, Statistik, Rechte, Kalender-Export |
-| `npm run test:db` | Datenbank auf frischem Postgres: 60+ Prüfungen zu Rechten, maskierten Daten, Funktionen und Benachrichtigungen |
+| `npm run test:db` | Datenbank auf frischem Postgres: 60+ Prüfungen zu Rechten, maskierten Daten, Funktionen und Benachrichtigungen, dazu die Beispieldaten für den lokalen Betrieb |
 | `npm run test:api` | Der echte Supabase-Adapter gegen Postgres + PostgREST (dieselbe REST-Schicht wie Supabase) für alle Rollen |
 | `npm run test:e2e` | Klickt die wichtigsten Abläufe im Browser durch (Zusage, Absage, Live-Erfassung, Helfen, Freischalten …) |
 

@@ -20,3 +20,19 @@ for f in supabase/migrations/*.sql; do "${PSQL[@]}" -f "$f"; done
 "${PSQL[@]}" -f supabase/seed.sql
 "${PSQL[@]}" -o /dev/null -f supabase/tests/rls_test.sql
 echo "✅ Datenbank-Tests bestanden"
+
+# Beispieldaten für den lokalen Betrieb: einmal die eingecheckte Datei, einmal eine,
+# die vor 5 Wochen erzeugt wurde (Termine müssen trotzdem um "jetzt" herum liegen)
+OLD=$(date -u -d '5 weeks ago' +%Y-%m-%dT%H:%M:%SZ 2>/dev/null || date -u -v-5w +%Y-%m-%dT%H:%M:%SZ)
+SEED_NOW=$OLD SEED_OUT="$DIR/seed.demo.old.sql" npx tsx scripts/demo-sql.ts >/dev/null
+for variant in supabase/seed.demo.sql "$DIR/seed.demo.old.sql"; do
+  DB=demo_$RANDOM
+  "$PGBIN/createdb" -h "$DIR" -p "$PORT" -U postgres "$DB"
+  DEMO=("$PGBIN/psql" -h "$DIR" -p "$PORT" -U postgres -d "$DB" -v ON_ERROR_STOP=1 -q -X -o /dev/null)
+  "${DEMO[@]}" -f supabase/tests/auth_stub.sql 2>/dev/null
+  for f in supabase/migrations/*.sql; do "${DEMO[@]}" -f "$f"; done
+  "${DEMO[@]}" -f supabase/seed.sql
+  "${DEMO[@]}" -f "$variant"
+  "${DEMO[@]}" -f supabase/tests/demo_seed_test.sql
+done
+echo "✅ Beispieldaten für den lokalen Betrieb in Ordnung (aktuell und 5 Wochen alt)"

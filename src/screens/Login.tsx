@@ -9,6 +9,9 @@ import { Button, Field, Input } from '@/components/ui'
 import { errorText, useToast } from '@/components/Toast'
 import { cn } from '@/lib/util'
 
+/** Im lokalen Betrieb (npm run lokal) landen Anmeldecodes in einem Test-Postfach */
+const LOCAL_MAIL = import.meta.env.VITE_LOCAL_MAIL_URL as string | undefined
+
 const PERSONA_HUE: Record<string, number> = { 'm-lena': 350, 'm-tim': 210, 'm-sabine': 30, 'm-andrea': 140 }
 
 export function Login() {
@@ -144,7 +147,9 @@ export function Login() {
               <ShieldCheck className="mt-0.5 size-4 shrink-0" />
               {api.mode === 'demo'
                 ? 'Demo-Modus: Alle Daten sind Beispiele und bleiben nur auf diesem Gerät.'
-                : 'Kein Passwort nötig. Du bleibst auf diesem Gerät angemeldet, deine Daten liegen auf Servern in der EU.'}
+                : LOCAL_MAIL
+                  ? 'Lokaler Betrieb: Alle Daten liegen in der Datenbank auf diesem PC.'
+                  : 'Kein Passwort nötig. Du bleibst auf diesem Gerät angemeldet, deine Daten liegen auf Servern in der EU.'}
             </p>
           </form>
         </div>
@@ -165,6 +170,38 @@ export function Login() {
             <span className="mt-0.5 block text-xs text-muted">Für Mitglieder, Eltern & Neue</span>
           </Link>
         </div>
+
+        {LOCAL_MAIL && (
+          <section className="mt-8 rounded-2xl border border-amber-300 bg-amber-50 p-4 text-sm text-amber-900 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-200">
+            <h2 className="font-bold">Lokaler Testbetrieb auf diesem PC</h2>
+            <p className="mt-1">
+              Es werden keine echten E-Mails verschickt. Den Anmeldecode findest du im{' '}
+              <a href={LOCAL_MAIL} target="_blank" rel="noreferrer" className="font-semibold underline">
+                lokalen Postfach
+              </a>
+              .
+            </p>
+            <div className="mt-3 flex flex-wrap gap-2">
+              {PERSONAS.map((p) => {
+                const mail = `${p.who.split(' ')[0].toLowerCase()}@example.org`
+                return (
+                  <button
+                    key={p.id}
+                    type="button"
+                    onClick={() => {
+                      setMode('code')
+                      setCodeSent(false)
+                      setEmail(mail)
+                    }}
+                    className="rounded-full border border-amber-400 bg-white/70 px-3 py-1 font-semibold dark:bg-transparent"
+                  >
+                    {p.role}: {mail}
+                  </button>
+                )
+              })}
+            </div>
+          </section>
+        )}
 
         {api.mode === 'demo' && (
           <section className="mt-8">
