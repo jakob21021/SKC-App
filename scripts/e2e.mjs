@@ -6,7 +6,7 @@ import assert from 'node:assert/strict'
 
 const PORT = 4319
 const BASE = `http://localhost:${PORT}/`
-const server = await preview({ preview: { port: PORT, strictPort: true }, logLevel: 'silent' })
+const server = await preview({ preview: { port: PORT, strictPort: true }, build: { outDir: process.env.E2E_DIST ?? 'dist' }, logLevel: 'silent' })
 
 const browser = await chromium.launch({
   executablePath: process.env.CHROMIUM_PATH ?? '/opt/pw-browsers/chromium-1194/chrome-linux/chrome',
@@ -15,7 +15,7 @@ const errors = []
 const newPage = async () => {
   const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, locale: 'de-DE', timezoneId: 'Europe/Berlin', serviceWorkers: 'block' })
   const page = await ctx.newPage()
-  page.on('pageerror', (e) => errors.push(e.message))
+  page.on('pageerror', (e) => errors.push(e.stack ?? e.message))
   page.setDefaultTimeout(8000)
   return page
 }

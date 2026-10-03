@@ -48,7 +48,11 @@ export function useOpenResponses() {
 export function AppShell() {
   const { pathname } = useLocation()
   const open = useOpenResponses()
-  useEffect(() => window.scrollTo(0, 0), [pathname])
+  // Block statt Ausdruck: Neuere Browser geben bei scrollTo ein Promise zurück,
+  // das React sonst als Aufräumfunktion aufrufen würde.
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [pathname])
 
   return (
     <div className="min-h-dvh md:flex">
