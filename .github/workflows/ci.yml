@@ -28,3 +28,9 @@ jobs:
         run: node scripts/e2e.mjs
         env:
           CHROMIUM_PATH: /usr/bin/google-chrome
+      - name: End-to-End-Test (Safari-Engine/WebKit, iPhone)
+        run: |
+          npx --yes playwright@$(node -p "require('playwright-core/package.json').version") install --with-deps webkit
+          node scripts/e2e.mjs
+        env:
+          BROWSER: webkit

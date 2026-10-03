@@ -1,6 +1,6 @@
 // End-to-End-Rauchtest der wichtigsten Abläufe im Demo-Modus.
 // Aufruf: npm run build && node scripts/e2e.mjs
-import { chromium } from 'playwright-core'
+import { chromium, devices, webkit } from 'playwright-core'
 import { preview } from 'vite'
 import assert from 'node:assert/strict'
 
@@ -8,12 +8,21 @@ const PORT = 4319
 const BASE = `http://localhost:${PORT}/`
 const server = await preview({ preview: { port: PORT, strictPort: true }, build: { outDir: process.env.E2E_DIST ?? 'dist' }, logLevel: 'silent' })
 
-const browser = await chromium.launch({
-  executablePath: process.env.CHROMIUM_PATH ?? '/opt/pw-browsers/chromium-1194/chrome-linux/chrome',
-})
+// BROWSER=webkit testet mit der Safari-Engine und iPhone-Einstellungen (wie auf iOS)
+const SAFARI = process.env.BROWSER === 'webkit'
+const browser = SAFARI
+  ? await webkit.launch()
+  : await chromium.launch({
+      executablePath: process.env.CHROMIUM_PATH ?? '/opt/pw-browsers/chromium-1194/chrome-linux/chrome',
+    })
 const errors = []
 const newPage = async () => {
-  const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, locale: 'de-DE', timezoneId: 'Europe/Berlin', serviceWorkers: 'block' })
+  const ctx = await browser.newContext({
+    ...(SAFARI ? devices['iPhone 13'] : { viewport: { width: 390, height: 844 } }),
+    locale: 'de-DE',
+    timezoneId: 'Europe/Berlin',
+    serviceWorkers: 'block',
+  })
   const page = await ctx.newPage()
   page.on('pageerror', (e) => errors.push(e.stack ?? e.message))
   page.setDefaultTimeout(8000)
