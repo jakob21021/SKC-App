@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Schweriner KC">
+  <path d="M256 20 L462 78 V246 C462 372 374 458 256 496 C138 458 50 372 50 246 V78 Z" fill="#d41f26"/>
+  <path d="M256 46 L438 97 V246 C438 357 361 433 256 469 C151 433 74 357 74 246 V97 Z" fill="none" stroke="#fff" stroke-width="10"/>
+  <rect x="249" y="150" width="14" height="138" rx="5" fill="#fff"/>
+  <path d="M206 128 v34 a50 13 0 0 0 100 0 v-34" fill="#d41f26" stroke="#fff" stroke-width="9" stroke-linejoin="round"/>
+  <ellipse cx="256" cy="128" rx="50" ry="13" fill="#d41f26" stroke="#fff" stroke-width="9"/>
+  <path d="M231 140 v30 M256 141 v34 M281 140 v30" stroke="#fff" stroke-width="5" stroke-linecap="round"/>
+  <circle cx="184" cy="98" r="21" fill="#fff"/>
+  <path d="M165 91 q19 12 38 0 M165 106 q19 -12 38 0" fill="none" stroke="#d41f26" stroke-width="3.5"/>
+  <text x="256" y="388" text-anchor="middle" font-family="'Barlow Condensed','Arial Narrow',Arial,sans-serif" font-weight="800" font-style="italic" font-size="124" fill="#fff" letter-spacing="2">SKC</text>
+  <text x="256" y="434" text-anchor="middle" font-family="'Barlow Condensed','Arial Narrow',Arial,sans-serif" font-weight="700" font-size="38" fill="#fff" letter-spacing="8">'67</text>
+</svg>

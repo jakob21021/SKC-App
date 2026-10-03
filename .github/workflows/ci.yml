@@ -1,0 +1,30 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Unit-Tests
+        run: npm test
+      - name: Build
+        run: npm run build
+      - name: Datenbank-Tests (Postgres, Rechte & Funktionen)
+        run: npm run test:db
+      - name: Integrationstest Supabase-Adapter (PostgREST)
+        run: npm run test:api
+      - name: End-to-End-Test (Chrome)
+        run: node scripts/e2e.mjs
+        env:
+          CHROMIUM_PATH: /usr/bin/google-chrome
